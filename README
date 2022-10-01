@@ -1,0 +1,98 @@
+@Copyright Mihai Alexandru 313CA 2021-2022@
+
+------------------------------------------------------------------------------
+
+	-Overview-
+
+This image editor is capable of performing certain photoshop feature such as
+rotating, cropping and applying an effect to a selected area. In addition, the
+current image is locally memorized through a loading process and can be
+transferred in another file by performing the save action. The accuracy of
+the applied effects is enhanced by precised calculations, allowing a large
+number of filters to be consecutively applied to the picture without
+noticing effect disruptions.
+
+------------------------------------------------------------------------------
+
+	-Memorization of the image-
+
+The image consists of a structure that enherences certain information from
+the input file: description of the pixels (through a matrix), the height and
+width of the picture, the maximum intensity of the picture, as well as the
+selected section at any given time (starting by selecting the entire image).
+Each pixel includes a red, green and blue value for each of that respective
+intensity (for a colored images), and a gray value (for grayscale pictures).
+
+------------------------------------------------------------------------------
+
+	-The loading function-
+
+The input file is opened as a binary file and the info is read accordingly
+to the image's type - standard file reading for ascii documents and binary
+reading for binary files. Initially, the entire picture is selected. For
+improved precision for future matrix multiplications the matrix of pixels
+includes decimale values.
+
+The standard command pattern: LOAD <file_name>
+
+------------------------------------------------------------------------------
+
+	-The selection function-
+
+Two possible selections are available: for the entire picture or for cardinal
+coordinates in the matrix. Erroneous commands or invalid coordinates will
+result in displaying a respective error message. Until further select
+instructions the following operations will be restricted to the select area.
+
+The standard command pattern for full select: SELECT ALL
+The standard command pattern for partial select: SELECT <x1> <y1> <x2> <y2>
+
+------------------------------------------------------------------------------
+
+	-The rotation function-
+
+Two possible rotations are available: for the entire picture or for a certain
+square selection. The rotation angle is restricted to multiples of 90, other
+values being treated as unsupported. The process takes place inside an
+auxiliary matrix that will be overwritten in the main image.
+
+The standard command for rotate: ROTATE <angle> (angle = multiple of 90)
+
+------------------------------------------------------------------------------
+
+	-The crop function-
+
+The cropped image is the result of freeing the old pixel matrix and including
+only the pixel from the selected area.
+
+The standard crop command: CROP
+
+------------------------------------------------------------------------------
+
+	-The filters function-
+
+Certainly the most expected feature of an image editor, the apply section
+includes 4 filters: EDGE, SHARPEN, BLUR, GAUSSIAN_BLUR. Each pixel in the
+selected are is going to the process of applying a kernel, resulting in a new
+value based on the kernel of the effect itself and the neighbours of the
+pixel. Considering that the value might be lower than 0 or exceed 255
+(the maximum allowed intensity), a clamp function is being used in order to
+restrict the value of the pixel to this interval. After the affected matrix
+is fully built inside an auxiliary matrix, the overwritten process will happen
+inside the main picture.
+
+The standard command: APPLY <filter>
+(filter = EDGE/SHARPEN/BLUR/GAUSSIAN_BLUR)
+
+------------------------------------------------------------------------------
+
+	-The saving function-
+
+Very similar to the load function, the save function opens a binary file
+and includes all the required information for future actions on the picture.
+The image could be saved either in ascii format on binary. The decimal
+values inside the matrix are rounded to the closest integer and casted to
+an unsinged char in order to follow the standard format on a picture.
+
+The standard command: SAVE <file_name> [ascii]
+*the [ascii] argument may not be included
